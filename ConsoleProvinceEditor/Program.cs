@@ -5,26 +5,16 @@ using FileActions;
 
 namespace ConsoleProvinceEditor {
 	class Program {
-		//Directory containing province files.
-		public const String dir = @"C:\Users\lcderado\Documents\TextPlayground";
 		static void Main(string[] args) {
+			String dir = @"C:\Users\lcderado\Documents\TextPlayground"; //Directory containing province files.
+			CommandConsole console = new CommandConsole(dir);
 			bool running = true;
-			String command = "";
 			while (running) {
 				//Retrieve User Command
 				Console.WriteLine(">> Enter a command...");
 				String input = Console.ReadLine();
-				Console.WriteLine("your command was:\n{0}\n",input);
-
 				//Interpret Command.
-				inp
-				//Switch statement selects command.
-				switch (input) {
-					case "quit":
-						Console.WriteLine("Quiting.");
-						running = false;
-						break;
-				}
+				CommandConsole.Interpret(input);
 			}
 		}
 		public static void testBuild(String buildDir) {
@@ -42,12 +32,60 @@ namespace ConsoleProvinceEditor {
 	 * A Console can perform a command.
 	 * */
 	public class CommandConsole {
-		public String ActDir {get; set;}
+		private String ActDir;
 		private int[] members;
+		private String resourceDir;
+
 		public delegate void Plan(String path, params object[] arguments); //What to do once you get to a file.
-		public CommandConsole(String actDir,int[] members) {
+		public CommandConsole(String actDir) {
+			//Setup procedure:
+
+			//1. Make sure file structure is proper.
 			ActDir = actDir;
-			this.members = members;
+			resourceDir = actDir + "\\resources";
+
+			//Do not create files for now. Only edit them.
+			if (Directory.Exists(resourceDir))
+			{
+				Console.WriteLine("Resource Directory Found");
+				if (File.Exists(resourceDir + "\\regions.txt"))
+				{
+					Console.WriteLine("Regions file found.");
+				} else
+				{
+					Console.WriteLine("Regions file needs to be created at "+ resourceDir + "\\regions.txt");
+				}
+			} else
+			{
+				Console.WriteLine("Resource Directory Needs to be created at " + resourceDir + " .");
+			}
+
+			//2. Build regions
+		}
+
+		/*Huge method where all commands are interpretted by the console. */
+		public static void Interpret(String input)
+		{
+			String workSpace = input;
+			//check if command refers to a region.
+			Match match = Regex.Match(input, "^\\s*region\\s+");
+			if (match.Success)
+			{
+				//check that alias is correct
+				workSpace = input.Substring(match.Length);
+				int start = match.Length;
+				match = Regex.Match(input, "^[a-zA-Z]+");
+				//Search for that alias in the region resource file.
+				if (match.Success)
+				{
+					workSpace = input.Substring(start,match.Length);
+					Console.WriteLine("Region {0} Found.",workSpace);
+				}
+				else
+				{
+					Console.WriteLine("Region {0} Not Found.", workSpace);
+				}
+			}
 		}
 		public void Go(Plan function, params object[] args) {
 			//wraps around call.
