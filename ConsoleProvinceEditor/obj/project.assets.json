@@ -686,11 +686,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\lcderado\\Documents\\VS WorkBench\\ConsoleProvinceEditor\\ConsoleProvinceEditor\\ConsoleProvinceEditor.csproj",
+      "projectUniqueName": "C:\\Users\\lcderado\\Documents\\Github_WorkBench\\ConsoleProvinceEditor\\ConsoleProvinceEditor\\ConsoleProvinceEditor.csproj",
       "projectName": "ConsoleProvinceEditor",
-      "projectPath": "C:\\Users\\lcderado\\Documents\\VS WorkBench\\ConsoleProvinceEditor\\ConsoleProvinceEditor\\ConsoleProvinceEditor.csproj",
+      "projectPath": "C:\\Users\\lcderado\\Documents\\Github_WorkBench\\ConsoleProvinceEditor\\ConsoleProvinceEditor\\ConsoleProvinceEditor.csproj",
       "packagesPath": "C:\\Users\\lcderado\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\lcderado\\Documents\\VS WorkBench\\ConsoleProvinceEditor\\ConsoleProvinceEditor\\obj\\",
+      "outputPath": "C:\\Users\\lcderado\\Documents\\Github_WorkBench\\ConsoleProvinceEditor\\ConsoleProvinceEditor\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -710,8 +710,8 @@
       "frameworks": {
         "netcoreapp2.0": {
           "projectReferences": {
-            "C:\\Users\\lcderado\\Documents\\VS WorkBench\\ConsoleProvinceEditor\\ActionLibrary\\ActionLibrary.csproj": {
-              "projectPath": "C:\\Users\\lcderado\\Documents\\VS WorkBench\\ConsoleProvinceEditor\\ActionLibrary\\ActionLibrary.csproj"
+            "C:\\Users\\lcderado\\Documents\\Github_WorkBench\\ConsoleProvinceEditor\\ActionLibrary\\ActionLibrary.csproj": {
+              "projectPath": "C:\\Users\\lcderado\\Documents\\Github_WorkBench\\ConsoleProvinceEditor\\ActionLibrary\\ActionLibrary.csproj"
             }
           }
         }

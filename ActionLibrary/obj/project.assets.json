@@ -183,11 +183,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\lcderado\\Documents\\VS WorkBench\\ConsoleProvinceEditor\\ActionLibrary\\ActionLibrary.csproj",
+      "projectUniqueName": "C:\\Users\\lcderado\\Documents\\Github_WorkBench\\ConsoleProvinceEditor\\ActionLibrary\\ActionLibrary.csproj",
       "projectName": "ActionLibrary",
-      "projectPath": "C:\\Users\\lcderado\\Documents\\VS WorkBench\\ConsoleProvinceEditor\\ActionLibrary\\ActionLibrary.csproj",
+      "projectPath": "C:\\Users\\lcderado\\Documents\\Github_WorkBench\\ConsoleProvinceEditor\\ActionLibrary\\ActionLibrary.csproj",
       "packagesPath": "C:\\Users\\lcderado\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\lcderado\\Documents\\VS WorkBench\\ConsoleProvinceEditor\\ActionLibrary\\obj\\",
+      "outputPath": "C:\\Users\\lcderado\\Documents\\Github_WorkBench\\ConsoleProvinceEditor\\ActionLibrary\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
