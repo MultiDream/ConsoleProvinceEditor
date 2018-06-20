@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace FileActions
 {
@@ -64,7 +65,7 @@ namespace FileActions
 		}
 
 
-		//HELPER FUNCTIONS.
+		//HELPER FUNCTIONS. These cannot be plans passed to Go.
 
 		/* Find a phrase. Phrase is arguement 0. Return by setting arg 1*/
 		public static bool searchFile(String path, params object[] args)
@@ -88,6 +89,38 @@ namespace FileActions
 				}
 				//System.Console.WriteLine("Does not contain phrase: {0}.",(String) args[0]);
 				return false;
+			}
+			catch (Exception specifics)
+			{
+				Console.WriteLine("Failed!");
+				Console.WriteLine("Unknown error occured when reading {0}", path);
+				throw specifics;
+			}
+		}
+
+		/* Find a region, get it's members.*/
+		public static List<int> getMembers(String path, String targetRegion)
+		{
+			List<int> members = new List<int>();
+			//System.Console.WriteLine("Searching...");
+			try
+			{
+				String goalPattern = targetRegion;
+				using (FileStream fs = File.Open(path, FileMode.Open))
+				using (TextReader reader = new StreamReader(fs))
+				{
+					while (reader.Peek() > -1)
+					{
+						String line = reader.ReadLine();
+						if (Regex.IsMatch(line, "\\s*" + goalPattern + "\\s+"))
+						{
+							//System.Console.WriteLine("Phrase: '{0}' found.", goalPattern);
+							return members;
+						}
+					}
+				}
+				System.Console.WriteLine("Region not found.");
+				return members; //contains no provinces.
 			}
 			catch (Exception specifics)
 			{

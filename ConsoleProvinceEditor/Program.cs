@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 using FileActions;
 
 namespace ConsoleProvinceEditor {
@@ -10,7 +11,7 @@ namespace ConsoleProvinceEditor {
 		}
 		public static void Run()
 		{
-			String dir = ; //Directory containing province files.
+			String dir = @"C:\Users\lukad\Documents\America Universalis\DevFiles\Provinces\textFiles"; //Directory containing province files.
 			CommandConsole console = new CommandConsole(dir);
 			bool running = true;
 			while (running)
@@ -19,7 +20,7 @@ namespace ConsoleProvinceEditor {
 				Console.WriteLine(">> Enter a command...");
 				String input = Console.ReadLine();
 				//Interpret Command.
-				console.Interpret(input);
+				console.Interpret(console.MakeCommand(input));
 			}
 		}
 		public static void testBuild(String buildDir) {
@@ -69,38 +70,36 @@ namespace ConsoleProvinceEditor {
 		}
 
 		/*Huge method where all commands are interpretted by the console. */
-		public void Interpret(String input)
+		public void Interpret(String[] input)
 		{
-			String workSpace = input;
-			//check if command refers to a region.
-			Match match = Regex.Match(workSpace, "^\\s*region\\s+");
-			if (match.Success)
-			{
-				//check that alias is correct
-				workSpace = input.Substring(match.Length);
-				match = Regex.Match(workSpace, "^[a-zA-Z]+");
-				
-				if (match.Success)
+			if (input.Length > 0) {
+				String word = input[0].ToLower();
+				switch (word)
 				{
-					workSpace = workSpace.Substring(0,match.Length);
-					//Search for that alias in the region resource file.
-					if (Command.searchFile(resourceDir + "\\regions.txt", workSpace))
-					{
-						Console.WriteLine("Region defined.");
-					}
-					else
-					{
-						Console.WriteLine("Region not defined.");
-					}
-					//Command.searchFile(resourceDir,workSpace);
-				}
-				else
-				{
-					Console.WriteLine("{0} is not a valid region name.", workSpace);
+					case "region":
+						//Do that method.
+						break;
+					default:
+						Console.WriteLine("Did not recognize command '{0}'.",word);
+						break;
 				}
 			}
 		}
 
+		public String[] MakeCommand(String input)
+		{
+			List<String> words = new List<string>();
+			String remaining = input;
+			Match nextWord;
+			do
+			{
+				nextWord = Regex.Match(remaining, "\\s*[a-zA-Z0-9\\{\\}]+\\s*");
+				words.Add(remaining.Substring(nextWord.Index,nextWord.Length).Trim());
+				remaining = remaining.Substring(nextWord.Length).Trim();
+			}
+			while (nextWord.Name != "" && remaining != ""); //nothing caught.
+			return words.ToArray();
+		}
 		/* Pass a function to Go to perform it on all members of a region.*/
 		public void Go(Plan function, params object[] args) {
 			//wraps around call.
