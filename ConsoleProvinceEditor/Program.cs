@@ -6,15 +6,20 @@ using FileActions;
 namespace ConsoleProvinceEditor {
 	class Program {
 		static void Main(string[] args) {
-			String dir = @"C:\Users\lcderado\Documents\TextPlayground"; //Directory containing province files.
+			Run();
+		}
+		public static void Run()
+		{
+			String dir = ; //Directory containing province files.
 			CommandConsole console = new CommandConsole(dir);
 			bool running = true;
-			while (running) {
+			while (running)
+			{
 				//Retrieve User Command
 				Console.WriteLine(">> Enter a command...");
 				String input = Console.ReadLine();
 				//Interpret Command.
-				CommandConsole.Interpret(input);
+				console.Interpret(input);
 			}
 		}
 		public static void testBuild(String buildDir) {
@@ -32,9 +37,9 @@ namespace ConsoleProvinceEditor {
 	 * A Console can perform a command.
 	 * */
 	public class CommandConsole {
-		private String ActDir;
-		private int[] members;
-		private String resourceDir;
+		public String ActDir;
+		public int[] members;
+		public String resourceDir;
 
 		public delegate void Plan(String path, params object[] arguments); //What to do once you get to a file.
 		public CommandConsole(String actDir) {
@@ -64,29 +69,39 @@ namespace ConsoleProvinceEditor {
 		}
 
 		/*Huge method where all commands are interpretted by the console. */
-		public static void Interpret(String input)
+		public void Interpret(String input)
 		{
 			String workSpace = input;
 			//check if command refers to a region.
-			Match match = Regex.Match(input, "^\\s*region\\s+");
+			Match match = Regex.Match(workSpace, "^\\s*region\\s+");
 			if (match.Success)
 			{
 				//check that alias is correct
 				workSpace = input.Substring(match.Length);
-				int start = match.Length;
-				match = Regex.Match(input, "^[a-zA-Z]+");
-				//Search for that alias in the region resource file.
+				match = Regex.Match(workSpace, "^[a-zA-Z]+");
+				
 				if (match.Success)
 				{
-					workSpace = input.Substring(start,match.Length);
-					Console.WriteLine("Region {0} Found.",workSpace);
+					workSpace = workSpace.Substring(0,match.Length);
+					//Search for that alias in the region resource file.
+					if (Command.searchFile(resourceDir + "\\regions.txt", workSpace))
+					{
+						Console.WriteLine("Region defined.");
+					}
+					else
+					{
+						Console.WriteLine("Region not defined.");
+					}
+					//Command.searchFile(resourceDir,workSpace);
 				}
 				else
 				{
-					Console.WriteLine("Region {0} Not Found.", workSpace);
+					Console.WriteLine("{0} is not a valid region name.", workSpace);
 				}
 			}
 		}
+
+		/* Pass a function to Go to perform it on all members of a region.*/
 		public void Go(Plan function, params object[] args) {
 			//wraps around call.
 			String[] files = Directory.GetFiles(ActDir);

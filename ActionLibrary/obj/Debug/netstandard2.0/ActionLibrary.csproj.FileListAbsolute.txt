@@ -16,3 +16,12 @@ C:\Users\lcderado\Documents\Github_WorkBench\ConsoleProvinceEditor\ActionLibrary
 C:\Users\lcderado\Documents\Github_WorkBench\ConsoleProvinceEditor\ActionLibrary\obj\Debug\netstandard2.0\ActionLibrary.AssemblyInfo.cs
 C:\Users\lcderado\Documents\Github_WorkBench\ConsoleProvinceEditor\ActionLibrary\obj\Debug\netstandard2.0\ActionLibrary.dll
 C:\Users\lcderado\Documents\Github_WorkBench\ConsoleProvinceEditor\ActionLibrary\obj\Debug\netstandard2.0\ActionLibrary.pdb
+C:\Users\lukad\Documents\America Universalis\DevFiles\Provinces\ConsoleProvinceEditor\ActionLibrary\bin\Debug\netstandard2.0\ActionLibrary.deps.json
+C:\Users\lukad\Documents\America Universalis\DevFiles\Provinces\ConsoleProvinceEditor\ActionLibrary\bin\Debug\netstandard2.0\ActionLibrary.dll
+C:\Users\lukad\Documents\America Universalis\DevFiles\Provinces\ConsoleProvinceEditor\ActionLibrary\bin\Debug\netstandard2.0\ActionLibrary.pdb
+C:\Users\lukad\Documents\America Universalis\DevFiles\Provinces\ConsoleProvinceEditor\ActionLibrary\obj\Debug\netstandard2.0\ActionLibrary.csprojAssemblyReference.cache
+C:\Users\lukad\Documents\America Universalis\DevFiles\Provinces\ConsoleProvinceEditor\ActionLibrary\obj\Debug\netstandard2.0\ActionLibrary.csproj.CoreCompileInputs.cache
+C:\Users\lukad\Documents\America Universalis\DevFiles\Provinces\ConsoleProvinceEditor\ActionLibrary\obj\Debug\netstandard2.0\ActionLibrary.AssemblyInfoInputs.cache
+C:\Users\lukad\Documents\America Universalis\DevFiles\Provinces\ConsoleProvinceEditor\ActionLibrary\obj\Debug\netstandard2.0\ActionLibrary.AssemblyInfo.cs
+C:\Users\lukad\Documents\America Universalis\DevFiles\Provinces\ConsoleProvinceEditor\ActionLibrary\obj\Debug\netstandard2.0\ActionLibrary.dll
+C:\Users\lukad\Documents\America Universalis\DevFiles\Provinces\ConsoleProvinceEditor\ActionLibrary\obj\Debug\netstandard2.0\ActionLibrary.pdb

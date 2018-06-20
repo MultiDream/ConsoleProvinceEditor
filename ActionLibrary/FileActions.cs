@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace FileActions
 {
@@ -43,18 +44,53 @@ namespace FileActions
 			}
 		}
 
-		/* Reads a File. */
+		/* Reads a File. By adding more arguements, you can change the output. */
 		public static void readFile(String path, params object[] args) {
 			System.Console.Write("Reading...\n\n");
 			try {
+				String find = (String) args[0];
 				using (FileStream fs = File.Open(path, FileMode.Open))
 				using (TextReader reader = new StreamReader(fs)) {
 					while(reader.Peek() > -1) {
-						Console.WriteLine(reader.ReadLine());
+						
 					}
 				}
 				System.Console.WriteLine("\nDone Reading.\n");
 			} catch (Exception specifics) {
+				Console.WriteLine("Failed!");
+				Console.WriteLine("Unknown error occured when reading {0}", path);
+				throw specifics;
+			}
+		}
+
+
+		//HELPER FUNCTIONS.
+
+		/* Find a phrase. Phrase is arguement 0. Return by setting arg 1*/
+		public static bool searchFile(String path, params object[] args)
+		{
+			//System.Console.WriteLine("Searching...");
+			try
+			{
+				String goalPattern = (String)args[0];
+				using (FileStream fs = File.Open(path, FileMode.Open))
+				using (TextReader reader = new StreamReader(fs))
+				{
+					while (reader.Peek() > -1)
+					{
+						String line = reader.ReadLine();
+						if (Regex.IsMatch(line, "\\s*" + goalPattern + "\\s+"))
+						{
+							//System.Console.WriteLine("Phrase: '{0}' found.", goalPattern);
+							return true;
+						}
+					}
+				}
+				//System.Console.WriteLine("Does not contain phrase: {0}.",(String) args[0]);
+				return false;
+			}
+			catch (Exception specifics)
+			{
 				Console.WriteLine("Failed!");
 				Console.WriteLine("Unknown error occured when reading {0}", path);
 				throw specifics;
