@@ -1,14 +1,23 @@
 # ConsoleProvinceEditor
 A small hack to quickly change many file's properties.
 
-### CURRENT VERSION: 0.2.0 Regions
+### CURRENT VERSION: 0.3.0 Changing Values
 * User enters directory, and can run the 'regions' command to verify the region is in resources.
 * No way to enter directory at run time yet.
 * Clear and write are not yet commands, but their code exists.
 
 ### Version History
 
-##### 0.2 Regions (Current Version)
+##### 0.3 Changing Values (Current Version)
+* Added Kill method to eliminate item.
+* Added Write method to write to a file.
+* Added Remove method to remove a phrase from a file.
+* Added Replace method to replace one phrase with another.
+* Changed direction of the project.
+
+* WARNING: No error checking currently exists. Mistakes are difficult to fix.
+
+##### 0.2 Regions 
 * Add a text file that defines aliases for regions.
 
 ##### 0.1 Initial Commit
@@ -18,16 +27,12 @@ A small hack to quickly change many file's properties.
 
 ### Upcoming Versions
 
-##### 0.3 Changing Values (Dev Version)
-* Add a regex listener to search for phrases.
-* Allow regex to search for lines containing a value
-* Allow regex to replace, delete or insert after these lines.
+##### 0.4 Anonymous Regions
+* Allow a region clause ({ # # # }) to be defined and used in commands
 
-##### 0.4 If then else
-* Allow conditions for each province inside a region.
-
-##### 0.5 Verify
-* Create engine to verify files in region have proper syntax.
+##### 0.5 Conditionals
+* Allow conditional clause to restrict regions. (where command.)
+* Allow conditional clauses to change action. (limit command.)
 
 ##### 1.0 release
 * Polish glaring errors
