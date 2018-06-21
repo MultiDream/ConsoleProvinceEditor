@@ -99,28 +99,61 @@ namespace FileActions
 		}
 
 		/* Find a region, get it's members.*/
-		public static List<int> getMembers(String path, String targetRegion)
+		public static int[] getMembers(String path, String targetRegion)
 		{
 			List<int> members = new List<int>();
 			//System.Console.WriteLine("Searching...");
 			try
 			{
 				String goalPattern = targetRegion;
+				Boolean found = false;
 				using (FileStream fs = File.Open(path, FileMode.Open))
 				using (TextReader reader = new StreamReader(fs))
 				{
-					while (reader.Peek() > -1)
+					while (reader.Peek() > -1 && found == false)
 					{
-						String line = reader.ReadLine();
-						if (Regex.IsMatch(line, "\\s*" + goalPattern + "\\s+"))
+						String line = reader.ReadLine(); //moves the reader to the next line by the way.
+						if (Regex.IsMatch(line, "\\s*" + goalPattern + "\\s*{")) //Does line contain region name with { after it?
 						{
-							//System.Console.WriteLine("Phrase: '{0}' found.", goalPattern);
-							return members;
+							System.Console.WriteLine("Phrase: '{0}' found.", goalPattern);
+							found = true;
 						}
 					}
+
+					if (found == false)
+					{
+						System.Console.WriteLine("Region not found, or improperly defined.");
+						return null;
+					}
+					else
+					{
+						while (reader.Peek() > -1)
+						{
+							String line = reader.ReadLine(); //moves the reader to the next line by the way.
+							if (Regex.IsMatch(line, "^}")) //Does line end now?
+							{
+								System.Console.WriteLine("Region '{0}' Closed", goalPattern);
+								return members.ToArray();
+							}
+							else
+							{
+								line.Trim();
+								while (line != "")
+								{
+									Match member = Regex.Match(line, "\\s*\\d+\\s*");
+									if (member.Success)
+									{
+										int newMem = Convert.ToInt32(line.Substring(member.Index, member.Length).Trim());
+										members.Add(newMem);
+										line = line.Substring(member.Length);
+									}
+								}
+							}
+						}
+					}
+					throw new System.Exception("Badly formatted Region. Regions should have the open brackets" +
+								"on the line with their name, and the close bracket alone after the last line containing members.");
 				}
-				System.Console.WriteLine("Region not found.");
-				return members; //contains no provinces.
 			}
 			catch (Exception specifics)
 			{

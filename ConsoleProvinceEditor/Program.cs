@@ -11,7 +11,7 @@ namespace ConsoleProvinceEditor {
 		}
 		public static void Run()
 		{
-			String dir = @"C:\Users\lukad\Documents\America Universalis\DevFiles\Provinces\textFiles"; //Directory containing province files.
+			String dir = ; //Directory containing province files.
 			CommandConsole console = new CommandConsole(dir);
 			bool running = true;
 			while (running)
@@ -20,7 +20,7 @@ namespace ConsoleProvinceEditor {
 				Console.WriteLine(">> Enter a command...");
 				String input = Console.ReadLine();
 				//Interpret Command.
-				console.Interpret(console.MakeCommand(input));
+				running = console.Interpret(console.MakeCommand(input));
 			}
 		}
 		public static void testBuild(String buildDir) {
@@ -70,7 +70,7 @@ namespace ConsoleProvinceEditor {
 		}
 
 		/*Huge method where all commands are interpretted by the console. */
-		public void Interpret(String[] input)
+		public Boolean Interpret(String[] input)
 		{
 			if (input.Length > 0) {
 				String word = input[0].ToLower();
@@ -78,28 +78,58 @@ namespace ConsoleProvinceEditor {
 				{
 					case "region":
 						//Do that method.
+						if (input.Length > 1)
+						{
+							int[] members = FileActions.Command.getMembers(resourceDir+"\\regions.txt",input[1]);
+							if (members != null){
+								System.Console.WriteLine("{0} Members", input[1]);
+								foreach (int member in members)
+								{
+									System.Console.WriteLine(member.ToString());
+								}
+							}
+						}
+						else
+						{
+							Console.WriteLine("Need a second arguement <region> for region command.");
+						}
 						break;
+					case "exit":
+						return false; //stop
 					default:
 						Console.WriteLine("Did not recognize command '{0}'.",word);
 						break;
 				}
 			}
+			return true; //keep running
 		}
 
 		public String[] MakeCommand(String input)
 		{
 			List<String> words = new List<string>();
-			String remaining = input;
+			String remaining = input.Trim();
 			Match nextWord;
 			do
 			{
-				nextWord = Regex.Match(remaining, "\\s*[a-zA-Z0-9\\{\\}]+\\s*");
-				words.Add(remaining.Substring(nextWord.Index,nextWord.Length).Trim());
+				//Make sure to capture a phrase as ONE string.
+				nextWord = Regex.Match(remaining,"^\\s*\\\"(.*?)\\\"\\s*"); // Look for phrase of double quotes containing ANYTHING.
+				if (nextWord.Success)
+				{
+					String hold = remaining.Substring(nextWord.Index, nextWord.Length).Trim();
+					words.Add(hold);
+				}
+				else
+				{
+					nextWord = Regex.Match(remaining, "^\\s*[a-zA-Z0-9{}]+\\s*");
+					String hold = remaining.Substring(nextWord.Index, nextWord.Length).Trim();
+					words.Add(hold);
+				}
 				remaining = remaining.Substring(nextWord.Length).Trim();
 			}
-			while (nextWord.Name != "" && remaining != ""); //nothing caught.
+			while (nextWord.Success && remaining != ""); //nothing caught.
 			return words.ToArray();
 		}
+
 		/* Pass a function to Go to perform it on all members of a region.*/
 		public void Go(Plan function, params object[] args) {
 			//wraps around call.
