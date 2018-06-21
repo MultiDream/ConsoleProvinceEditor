@@ -11,7 +11,8 @@ namespace ConsoleProvinceEditor {
 		}
 		public static void Run()
 		{
-			String dir = ; //Directory containing province files.
+			System.Console.WriteLine("Enter the directory. Do not inclue the / . BECAREFUL TO GET THIS RIGHT!");
+			String dir = Console.ReadLine(); //Directory containing province files.
 			CommandConsole console = new CommandConsole(dir);
 			bool running = true;
 			while (running)
@@ -39,7 +40,6 @@ namespace ConsoleProvinceEditor {
 	 * */
 	public class CommandConsole {
 		public String ActDir;
-		public int[] members;
 		public String resourceDir;
 
 		public delegate void Plan(String path, params object[] arguments); //What to do once you get to a file.
@@ -57,6 +57,7 @@ namespace ConsoleProvinceEditor {
 				if (File.Exists(resourceDir + "\\regions.txt"))
 				{
 					Console.WriteLine("Regions file found.");
+					Console.WriteLine("Your directory entry is probably correct.");
 				} else
 				{
 					Console.WriteLine("Regions file needs to be created at "+ resourceDir + "\\regions.txt");
@@ -92,6 +93,86 @@ namespace ConsoleProvinceEditor {
 						else
 						{
 							Console.WriteLine("Need a second arguement <region> for region command.");
+						}
+						break;
+					case "kill":
+						if (input.Length > 1)
+						{
+							int[] members = FileActions.Command.getMembers(resourceDir + "\\regions.txt", input[1]);
+							if (members != null)
+							{
+								Plan kill = Command.clearFile; 
+								Go(kill,members);//no other arguements necessary
+							}
+							else
+							{
+								Console.WriteLine("Need a second arguement <region> for delete command.");
+							}
+						}
+						else
+						{
+							Console.WriteLine("Need a second arguement <region> for delete command.");
+						}
+						break;
+					case "write":
+						if (input.Length > 2)
+						{
+							int[] members = FileActions.Command.getMembers(resourceDir + "\\regions.txt", input[1]);
+							if (members != null)
+							{
+								Plan append = Command.writeFile;
+								String noQuotes = input[2].Substring(1, input[2].Length - 2);
+								Go(append, members,noQuotes);
+							}
+							else
+							{
+								Console.WriteLine("Need three arguements for the write command.");
+							}
+						}
+						else
+						{
+							Console.WriteLine("Need three arguements for the write command.");
+						}
+						break;
+					case "remove":
+						if (input.Length > 2)
+						{
+							int[] members = FileActions.Command.getMembers(resourceDir + "\\regions.txt", input[1]);
+							if (members != null)
+							{
+								Plan remove= Command.remove;
+								String noQuotes = input[2].Substring(1, input[2].Length - 2);
+								Go(remove, members, noQuotes);
+							}
+							else
+							{
+								Console.WriteLine("Need three arguements for the remove command.");
+							}
+						}
+						else
+						{
+							Console.WriteLine("Need three arguements for the remove command.");
+						}
+						break;
+					case "replace":
+						if (input.Length > 3)
+						{
+							int[] members = FileActions.Command.getMembers(resourceDir + "\\regions.txt", input[1]);
+							if (members != null)
+							{
+								Plan replace = Command.replace;
+								String noQuoteOut = input[2].Substring(1, input[2].Length - 2);
+								String noQuoteIn = input[3].Substring(1, input[3].Length - 2);
+								Go(replace, members, noQuoteOut, noQuoteIn);
+							}
+							else
+							{
+								Console.WriteLine("Need four arguements for the replace command.");
+							}
+						}
+						else
+						{
+							Console.WriteLine("Need three arguements for the replace command.");
 						}
 						break;
 					case "exit":
@@ -131,7 +212,7 @@ namespace ConsoleProvinceEditor {
 		}
 
 		/* Pass a function to Go to perform it on all members of a region.*/
-		public void Go(Plan function, params object[] args) {
+		public void Go(Plan function, int[] members, params object[] args) {
 			//wraps around call.
 			String[] files = Directory.GetFiles(ActDir);
 			int[] targets = members;
