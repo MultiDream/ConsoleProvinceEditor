@@ -11,7 +11,8 @@ namespace ConsoleProvinceEditor {
 		}
 		public static void Run()
 		{
-			String dir = ; //Directory containing province files.
+			System.Console.WriteLine("Enter the directory. Do not inclue the / . BECAREFUL TO GET THIS RIGHT!");
+			String dir = Console.ReadLine(); //Directory containing province files.
 			CommandConsole console = new CommandConsole(dir);
 			bool running = true;
 			while (running)
@@ -57,6 +58,7 @@ namespace ConsoleProvinceEditor {
 				if (File.Exists(resourceDir + "\\regions.txt"))
 				{
 					Console.WriteLine("Regions file found.");
+					Console.WriteLine("Your directory entry is probably correct.");
 				} else
 				{
 					Console.WriteLine("Regions file needs to be created at "+ resourceDir + "\\regions.txt");
