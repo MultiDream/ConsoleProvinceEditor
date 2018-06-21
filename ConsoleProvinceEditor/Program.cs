@@ -40,7 +40,6 @@ namespace ConsoleProvinceEditor {
 	 * */
 	public class CommandConsole {
 		public String ActDir;
-		public int[] members;
 		public String resourceDir;
 
 		public delegate void Plan(String path, params object[] arguments); //What to do once you get to a file.
@@ -96,6 +95,45 @@ namespace ConsoleProvinceEditor {
 							Console.WriteLine("Need a second arguement <region> for region command.");
 						}
 						break;
+					case "kill":
+						if (input.Length > 1)
+						{
+							int[] members = FileActions.Command.getMembers(resourceDir + "\\regions.txt", input[1]);
+							if (members != null)
+							{
+								Plan kill = Command.clearFile; 
+								Go(kill,members);//no other arguements necessary
+							}
+							else
+							{
+								Console.WriteLine("Need a second arguement <region> for delete command.");
+							}
+						}
+						else
+						{
+							Console.WriteLine("Need a second arguement <region> for delete command.");
+						}
+						break;
+					case "write":
+						if (input.Length > 2)
+						{
+							int[] members = FileActions.Command.getMembers(resourceDir + "\\regions.txt", input[1]);
+							if (members != null)
+							{
+								Plan append = Command.writeFile;
+								String noQuotes = input[2].Substring(1, input[2].Length - 2);
+								Go(append, members,noQuotes);
+							}
+							else
+							{
+								Console.WriteLine("Need three arguements for the write command.");
+							}
+						}
+						else
+						{
+							Console.WriteLine("Need three arguements for the write command.");
+						}
+						break;
 					case "exit":
 						return false; //stop
 					default:
@@ -133,7 +171,7 @@ namespace ConsoleProvinceEditor {
 		}
 
 		/* Pass a function to Go to perform it on all members of a region.*/
-		public void Go(Plan function, params object[] args) {
+		public void Go(Plan function, int[] members, params object[] args) {
 			//wraps around call.
 			String[] files = Directory.GetFiles(ActDir);
 			int[] targets = members;
