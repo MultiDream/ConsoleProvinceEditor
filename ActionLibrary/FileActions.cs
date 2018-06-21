@@ -53,7 +53,8 @@ namespace FileActions
 				using (FileStream fs = File.Open(path, FileMode.Open))
 				using (TextReader reader = new StreamReader(fs)) {
 					while(reader.Peek() > -1) {
-						
+						String line = reader.ReadLine();
+						System.Console.WriteLine(line);
 					}
 				}
 				System.Console.WriteLine("\nDone Reading.\n");
@@ -64,7 +65,52 @@ namespace FileActions
 			}
 		}
 
+		/* Removes a phrase from a file. Arguement 0 is the phrase to remove. 
+		 * Note that every apearence of that phrase will be removed. 
+		 * Also removes the \r\n at the end of each tab.*/
+		public static void remove(String path, params object[] args)
+		{
+			try
+			{
+				String find = (String) args[0];
+				System.Console.Write("Removing phrase {0}...\n\n", find);
+				String buffer = File.ReadAllText(path);
+				buffer = buffer.Replace(find+"\r\n","");
+				File.WriteAllText(path,buffer);
+				System.Console.WriteLine("\nDone.\n");
+			}
+			catch (Exception specifics)
+			{
+				Console.WriteLine("Failed!");
+				Console.WriteLine("Unknown error occured when reading {0}", path);
+				throw specifics;
+			}
+		}
 
+		/* Replaces a phrase from a file. Arguement 0 is the phrase to remove. 
+		 * Note that every apearence of that phrase will be removed.
+		 * Arguement 1 is the new phrase to insert.
+		 * Also removes the \r\n at the end of each tab.*/
+		public static void replace(String path, params object[] args)
+		{
+			try
+			{
+				String find = (String)args[0];
+				String insert = (String)args[1];
+				System.Console.Write("Removing phrase {0}...\n\n", find);
+				String buffer = File.ReadAllText(path);
+				System.Console.Write("Inserting phrase {0}...\n\n", insert);
+				buffer = buffer.Replace(find + "\r\n", insert+"\r\n");
+				File.WriteAllText(path, buffer);
+				System.Console.WriteLine("\nDone.\n");
+			}
+			catch (Exception specifics)
+			{
+				Console.WriteLine("Failed!");
+				Console.WriteLine("Unknown error occured when reading {0}", path);
+				throw specifics;
+			}
+		}
 		//HELPER FUNCTIONS. These cannot be plans passed to Go.
 
 		/* Find a phrase. Phrase is arguement 0. Return by setting arg 1*/

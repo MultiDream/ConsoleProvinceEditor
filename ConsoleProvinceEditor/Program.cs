@@ -134,6 +134,47 @@ namespace ConsoleProvinceEditor {
 							Console.WriteLine("Need three arguements for the write command.");
 						}
 						break;
+					case "remove":
+						if (input.Length > 2)
+						{
+							int[] members = FileActions.Command.getMembers(resourceDir + "\\regions.txt", input[1]);
+							if (members != null)
+							{
+								Plan remove= Command.remove;
+								String noQuotes = input[2].Substring(1, input[2].Length - 2);
+								Go(remove, members, noQuotes);
+							}
+							else
+							{
+								Console.WriteLine("Need three arguements for the remove command.");
+							}
+						}
+						else
+						{
+							Console.WriteLine("Need three arguements for the remove command.");
+						}
+						break;
+					case "replace":
+						if (input.Length > 3)
+						{
+							int[] members = FileActions.Command.getMembers(resourceDir + "\\regions.txt", input[1]);
+							if (members != null)
+							{
+								Plan replace = Command.replace;
+								String noQuoteOut = input[2].Substring(1, input[2].Length - 2);
+								String noQuoteIn = input[3].Substring(1, input[3].Length - 2);
+								Go(replace, members, noQuoteOut, noQuoteIn);
+							}
+							else
+							{
+								Console.WriteLine("Need four arguements for the replace command.");
+							}
+						}
+						else
+						{
+							Console.WriteLine("Need three arguements for the replace command.");
+						}
+						break;
 					case "exit":
 						return false; //stop
 					default:
