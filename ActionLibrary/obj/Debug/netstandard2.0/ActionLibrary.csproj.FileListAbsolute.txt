@@ -24,3 +24,4 @@ C:\Users\lukad\Documents\America Universalis\DevFiles\Provinces\ConsoleProvinceE
 C:\Users\lukad\Documents\America Universalis\DevFiles\Provinces\ConsoleProvinceEditor\ActionLibrary\obj\Debug\netstandard2.0\ActionLibrary.AssemblyInfo.cs
 C:\Users\lukad\Documents\America Universalis\DevFiles\Provinces\ConsoleProvinceEditor\ActionLibrary\obj\Debug\netstandard2.0\ActionLibrary.dll
 C:\Users\lukad\Documents\America Universalis\DevFiles\Provinces\ConsoleProvinceEditor\ActionLibrary\obj\Debug\netstandard2.0\ActionLibrary.pdb
+C:\Users\lukad\Documents\America Universalis\DevFiles\Provinces\ConsoleProvinceEditor\ActionLibrary\obj\Debug\netstandard2.0\ActionLibrary.csprojAssemblyReference.cache

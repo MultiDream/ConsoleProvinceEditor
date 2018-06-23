@@ -1,12 +1,12 @@
 # ConsoleProvinceEditor
 A small hack to quickly change many file's properties.
 
-### CURRENT VERSION: 0.3.0 Changing Values
-* User enters directory, and can run the 'regions' command to verify the region is in resources.
-* No way to enter directory at run time yet.
-* Clear and write are not yet commands, but their code exists.
+### CURRENT VERSION: 0.3.1 Comments
 
 ### Version History
+
+##### 0.3.1 Comments (Current Version)
+* Allows comments in region and target files.
 
 ##### 0.3 Changing Values (Current Version)
 * Added Kill method to eliminate item.
@@ -27,8 +27,9 @@ A small hack to quickly change many file's properties.
 
 ### Upcoming Versions
 
-##### 0.4 Anonymous Regions
-* Allow a region clause ({ # # # }) to be defined and used in commands
+##### 0.4 Aliases
+* Allow an anonymous region clause ({ # # # }) to be defined and used in commands
+* Allow region nesting.
 
 ##### 0.5 Conditionals
 * Allow conditional clause to restrict regions. (where command.)

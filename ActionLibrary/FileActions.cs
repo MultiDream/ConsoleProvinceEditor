@@ -159,7 +159,8 @@ namespace FileActions
 					while (reader.Peek() > -1 && found == false)
 					{
 						String line = reader.ReadLine(); //moves the reader to the next line by the way.
-						if (Regex.IsMatch(line, "\\s*" + goalPattern + "\\s*{")) //Does line contain region name with { after it?
+						if (!Regex.IsMatch(line,"^\\s*#")) //Check that a hashtag does not procede everything.
+						if (Regex.IsMatch(line, "^\\s*" + goalPattern + "\\s*=\\s*{")) //Does line contain region name with { after it?
 						{
 							System.Console.WriteLine("Phrase: '{0}' found.", goalPattern);
 							found = true;
@@ -176,22 +177,25 @@ namespace FileActions
 						while (reader.Peek() > -1)
 						{
 							String line = reader.ReadLine(); //moves the reader to the next line by the way.
+							if (!Regex.IsMatch(line, "^\\s*#")) //Check that a hashtag does not procede everything.
 							if (Regex.IsMatch(line, "^}")) //Does line end now?
 							{
 								System.Console.WriteLine("Region '{0}' Closed", goalPattern);
 								return members.ToArray();
-							}
-							else
-							{
+							} else {
 								line.Trim();
-								while (line != "")
-								{
+								while (line != ""){
 									Match member = Regex.Match(line, "\\s*\\d+\\s*");
-									if (member.Success)
-									{
+									if (member.Success){
 										int newMem = Convert.ToInt32(line.Substring(member.Index, member.Length).Trim());
 										members.Add(newMem);
+										System.Console.WriteLine(newMem);
 										line = line.Substring(member.Length);
+									} else {
+										member = Regex.Match(line, "^\\s*#");
+										if (member.Success) {
+											break;
+										}
 									}
 								}
 							}

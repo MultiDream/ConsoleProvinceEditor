@@ -218,7 +218,7 @@ namespace ConsoleProvinceEditor {
 			int[] targets = members;
 			int countMiss = 0;
 			foreach (int target in targets) {
-				String pattern = @"\\" + target.ToString() + @"\s";
+				String pattern = @"\\" + target.ToString() + "[\\s\\-]";
 				bool exists = false;
 				foreach (string path in files) {
 					if (Regex.Match(path, pattern).Success) {
