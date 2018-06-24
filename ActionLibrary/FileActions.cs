@@ -11,11 +11,26 @@ namespace FileActions
 		public static void writeFile(String path,params object[] args) {
 			System.Console.Write("Writing...");
 			try {
-				String toWrite = (String) args[0];//Converts args[0] into a string.
-				using (FileStream fs = File.Open(path, FileMode.Append ))
-				using (TextWriter writer = new StreamWriter(fs)) {
-					writer.WriteLine(toWrite);
+				String toWrite = (String) args[0]; //Converts args[0] into a string.
+				List<String> allText = new List<string>();
+				String[] allLines = File.ReadAllLines(path);
+
+				/* I need some logic to determine whether or to post on a line.
+				 * I believe that each file comes with 1 line for a comment,
+				 * and then the 1444 data starts. When Editting new info,
+				 * we want to add there, and since that will always be the secondline,
+				 * that's where we'll put it automatically.
+				 * */
+
+				for(int i = 0; i < allLines.Length;i++){
+					if (i == 0) {
+						allText.Add(allLines[i]);
+						allText.Add(toWrite);
+					} else {
+						allText.Add(allLines[i]);
+					}
 				}
+				File.WriteAllLines(path,allText);
 				System.Console.WriteLine("Successful.\n");
 			} catch (Exception specifics) {
 				Console.WriteLine("Failed!");
@@ -185,7 +200,7 @@ namespace FileActions
 							} else {
 								line.Trim();
 								while (line != ""){
-									Match member = Regex.Match(line, "\\s*\\d+\\s*");
+									Match member = Regex.Match(line, "^\\s*\\d+\\s*");
 									if (member.Success){
 										int newMem = Convert.ToInt32(line.Substring(member.Index, member.Length).Trim());
 										members.Add(newMem);
