@@ -5,10 +5,13 @@ A small hack to quickly change many file's properties.
 
 ### Version History
 
-##### 0.3.1 Comments (Current Version)
+#### 0.3.1.1 Bug Fix for 3.1 (Current Version)
+* Fixed a bug where the write method did not create its own line on a consistant basis.
+
+##### 0.3.1 Comments
 * Allows comments in region and target files.
 
-##### 0.3 Changing Values (Current Version)
+##### 0.3 Changing Values
 * Added Kill method to eliminate item.
 * Added Write method to write to a file.
 * Added Remove method to remove a phrase from a file.
