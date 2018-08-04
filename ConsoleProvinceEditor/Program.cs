@@ -9,6 +9,7 @@ namespace ConsoleProvinceEditor {
 		static void Main(string[] args) {
 			Run();
 		}
+		#region Run
 		public static void Run()
 		{
 			System.Console.WriteLine("Enter the directory. Do not inclue the / . BECAREFUL TO GET THIS RIGHT!");
@@ -30,6 +31,7 @@ namespace ConsoleProvinceEditor {
 				File.Create(path);
 			}
 		}
+		#endregion
 	}
 
 	/*
@@ -43,6 +45,7 @@ namespace ConsoleProvinceEditor {
 		public String resourceDir;
 
 		public delegate void Plan(String path, params object[] arguments); //What to do once you get to a file.
+		#region CommandConsole
 		public CommandConsole(String actDir) {
 			//Setup procedure:
 
@@ -66,11 +69,15 @@ namespace ConsoleProvinceEditor {
 			{
 				Console.WriteLine("Resource Directory Needs to be created at " + resourceDir + " .");
 			}
-
-			//2. Build regions
 		}
-
-		/*Huge method where all commands are interpretted by the console. */
+		#endregion
+		#region Interpret
+		/*Huge method where all commands are interpretted by the console. 
+		 * I should note at some point, this needs to be broken up.
+		 * It violates single responsibility policy, and should
+		 * fire an event based on the first string.
+		 *
+		 */
 		public Boolean Interpret(String[] input)
 		{
 			if (input.Length > 0) {
@@ -83,7 +90,7 @@ namespace ConsoleProvinceEditor {
 						{
 							int[] members = FileActions.Command.getMembers(resourceDir+"\\regions.txt",input[1]);
 							if (members != null){
-								System.Console.WriteLine("{0} Members", input[1]);
+								System.Console.WriteLine("{0} Members", members.Length);
 								foreach (int member in members)
 								{
 									System.Console.WriteLine(member.ToString());
@@ -154,6 +161,20 @@ namespace ConsoleProvinceEditor {
 							Console.WriteLine("Need three arguements for the remove command.");
 						}
 						break;
+					case "removeline":
+						if (input.Length > 2) {
+							int[] members = FileActions.Command.getMembers(resourceDir + "\\regions.txt", input[1]);
+							if (members != null) {
+								Plan append = Command.removeAttribute;
+								String noQuotes = input[2].Substring(1, input[2].Length - 2);
+								Go(append, members, noQuotes);
+							} else {
+								Console.WriteLine("Region is Empty, or not found.");
+							}
+						} else {
+							Console.WriteLine("Need three arguements for the removeLine command.");
+						}
+						break;
 					case "replace":
 						if (input.Length > 3)
 						{
@@ -184,7 +205,8 @@ namespace ConsoleProvinceEditor {
 			}
 			return true; //keep running
 		}
-
+		#endregion
+		#region MakeCommand
 		public String[] MakeCommand(String input)
 		{
 			List<String> words = new List<string>();
@@ -198,19 +220,31 @@ namespace ConsoleProvinceEditor {
 				{
 					String hold = remaining.Substring(nextWord.Index, nextWord.Length).Trim();
 					words.Add(hold);
+					break;
 				}
-				else
-				{
-					nextWord = Regex.Match(remaining, "^\\s*[a-zA-Z0-9{}]+\\s*");
+
+				//Make sure to capture a square brackets as ONE COMMAND
+				nextWord = Regex.Match(remaining, "^\\s*\\{(.*?)\\}\\s*"); // Look for phrase of Square brackets containing ANYTHING.
+				if (nextWord.Success) {
 					String hold = remaining.Substring(nextWord.Index, nextWord.Length).Trim();
 					words.Add(hold);
+					break;
 				}
-				remaining = remaining.Substring(nextWord.Length).Trim();
+
+				//Catch Phrases with the right characters
+				nextWord = Regex.Match(remaining, "^\\s*[a-zA-Z]+\\s*");
+				if (nextWord.Success) {
+					String hold = remaining.Substring(nextWord.Index, nextWord.Length).Trim();
+					words.Add(hold);
+					remaining = remaining.Substring(nextWord.Length).Trim();
+				}
+				
 			}
 			while (nextWord.Success && remaining != ""); //nothing caught.
 			return words.ToArray();
 		}
-
+		#endregion
+		#region Go
 		/* Pass a function to Go to perform it on all members of a region.*/
 		public void Go(Plan function, int[] members, params object[] args) {
 			//wraps around call.
@@ -237,5 +271,6 @@ namespace ConsoleProvinceEditor {
 				Console.WriteLine("Missing {0} files!", countMiss);
 			}
 		}
+		#endregion
 	}
 }

@@ -21,7 +21,9 @@ namespace FileActions
 				 * we want to add there, and since that will always be the secondline,
 				 * that's where we'll put it automatically.
 				 * */
-
+				if (allLines.Length <= 0) {
+					allText.Add(toWrite);
+				}
 				for(int i = 0; i < allLines.Length;i++){
 					if (i == 0) {
 						allText.Add(allLines[i]);
@@ -126,6 +128,30 @@ namespace FileActions
 				throw specifics;
 			}
 		}
+		/* RemoveLine removes the WHOLE LINE if a matching attribute if found. */
+		public static void removeAttribute(String path, params object[] args) {
+		System.Console.Write("Writing...");
+			try {
+				String toFind = (String)args[0]; //Converts args[0] into a string.
+				List<String> allText = new List<string>();
+				String[] allLines = File.ReadAllLines(path);
+				
+				//Don't Add the lines that contain a match.
+				for(int i = 0; i < allLines.Length;i++){
+					String pattern = "\\s*" + toFind+"\\s+=";
+					if (!Regex.IsMatch(allLines[i],pattern)) {
+						allText.Add(allLines[i]);
+					}
+				}
+				File.WriteAllLines(path, allText);
+				System.Console.WriteLine("Successful.\n");
+			} catch (Exception specifics) {
+				Console.WriteLine("Failed!");
+				Console.WriteLine("Unknown error occured when dating {0}",path);
+				throw specifics;
+			}
+		}
+
 		//HELPER FUNCTIONS. These cannot be plans passed to Go.
 
 		/* Find a phrase. Phrase is arguement 0. Return by setting arg 1*/
@@ -164,64 +190,77 @@ namespace FileActions
 		{
 			List<int> members = new List<int>();
 			//System.Console.WriteLine("Searching...");
-			try
-			{
+			try {
 				String goalPattern = targetRegion;
 				Boolean found = false;
-				using (FileStream fs = File.Open(path, FileMode.Open))
-				using (TextReader reader = new StreamReader(fs))
-				{
-					while (reader.Peek() > -1 && found == false)
-					{
+				using (FileStream fs = File.Open(path, FileMode.Open,FileAccess.Read,FileShare.Read))
+				using (TextReader reader = new StreamReader(fs)) {
+					while (reader.Peek() > -1 && found == false) {
 						String line = reader.ReadLine(); //moves the reader to the next line by the way.
-						if (!Regex.IsMatch(line,"^\\s*#")) //Check that a hashtag does not procede everything.
-						if (Regex.IsMatch(line, "^\\s*" + goalPattern + "\\s*=\\s*{")) //Does line contain region name with { after it?
-						{
-							System.Console.WriteLine("Phrase: '{0}' found.", goalPattern);
-							found = true;
-						}
+						if (!Regex.IsMatch(line, "^\\s*#")) //Check that a hashtag does not procede everything.
+							if (Regex.IsMatch(line, "^\\s*" + goalPattern + "\\s*{")) //Does line contain region name with { after it?
+							{
+								System.Console.WriteLine("Phrase: '{0}' found.", goalPattern);
+								found = true;
+							}
 					}
 
-					if (found == false)
-					{
-						System.Console.WriteLine("Region not found, or improperly defined.");
+					if (found == false) {
+						System.Console.WriteLine("Region {0} not found, or improperly defined.",goalPattern);
 						return null;
-					}
-					else
-					{
-						while (reader.Peek() > -1)
-						{
+					} else {
+						while (reader.Peek() > -1) {
 							String line = reader.ReadLine(); //moves the reader to the next line by the way.
 							if (!Regex.IsMatch(line, "^\\s*#")) //Check that a hashtag does not procede everything.
-							if (Regex.IsMatch(line, "^}")) //Does line end now?
-							{
-								System.Console.WriteLine("Region '{0}' Closed", goalPattern);
-								return members.ToArray();
-							} else {
-								line.Trim();
-								while (line != ""){
-									Match member = Regex.Match(line, "^\\s*\\d+\\s*");
-									if (member.Success){
-										int newMem = Convert.ToInt32(line.Substring(member.Index, member.Length).Trim());
-										members.Add(newMem);
-										System.Console.WriteLine(newMem);
-										line = line.Substring(member.Length);
-									} else {
+								if (Regex.IsMatch(line, "^}")) //Does line end now?
+								{
+									System.Console.WriteLine("Region '{0}' Closed", goalPattern);
+									return members.ToArray();
+								} else {
+									line = line.Trim();
+									while (line != "") {
+
+										Match member = Regex.Match(line, "^\\s*\\d+\\s*");
+										if (member.Success) {
+											int newMem = Convert.ToInt32(line.Substring(member.Index, member.Length).Trim());
+											members.Add(newMem);
+											System.Console.WriteLine(newMem);
+											line = line.Substring(member.Length);
+											line.Trim();
+											break;
+										}
+
 										member = Regex.Match(line, "^\\s*#");
 										if (member.Success) {
+											line = line.Trim();
 											break;
+										}
+
+										// If another alias is found, get it's members.
+										member = Regex.Match(line, "^\\s*[a-zA-Z]+\\s*");
+										if (member.Success) {
+											// If the region recursively contains itself, throw an error.
+											if(member.Value == goalPattern){
+												throw new FormatException(
+												"You must not include a region within itself. That is recursive, and problematic.");
+											}
+											line = line.Trim();
+											int[] otherMembers = getMembers(path, member.Value);
+											if (otherMembers != null){
+												foreach (int i in otherMembers) {
+													members.Add(i);
+												}
+											}
+											line = line.Substring(member.Length);
 										}
 									}
 								}
-							}
 						}
+						throw new System.Exception("Badly formatted Region. Regions should have the open brackets" +
+									"on the line with their name, and the close bracket alone after the last line containing members.");
 					}
-					throw new System.Exception("Badly formatted Region. Regions should have the open brackets" +
-								"on the line with their name, and the close bracket alone after the last line containing members.");
 				}
-			}
-			catch (Exception specifics)
-			{
+			} catch (Exception specifics) {
 				Console.WriteLine("Failed!");
 				Console.WriteLine("Unknown error occured when reading {0}", path);
 				throw specifics;

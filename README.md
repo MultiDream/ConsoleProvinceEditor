@@ -5,7 +5,10 @@ A small hack to quickly change many file's properties.
 
 ### Version History
 
-#### 0.3.1.1 Bug Fix for 3.1 (Current Version)
+#### 0.4 Aliases (In development)
+* Allow Nesting for regions
+
+#### 0.3.1.1 Bug Fix for Comments (Released)
 * Fixed a bug where the write method did not create its own line on a consistant basis.
 
 ##### 0.3.1 Comments
