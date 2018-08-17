@@ -188,25 +188,31 @@ namespace FileActions
 		/* Find a region, get it's members.*/
 		public static int[] getMembers(String path, String targetRegion)
 		{
-			List<int> members = new List<int>();
+			List<int> members;
+			//Do a quick check to see if the targetRegion is actually anonymous region.
+			if (Regex.IsMatch(targetRegion, "^\\s*{")){
+				//Get all internal members.
+				members = getLineMembers(targetRegion,path,null);
+				return members.ToArray();
+			}
+			members = new List<int>();
 			//System.Console.WriteLine("Searching...");
 			try {
-				String goalPattern = targetRegion;
 				Boolean found = false;
 				using (FileStream fs = File.Open(path, FileMode.Open,FileAccess.Read,FileShare.Read))
 				using (TextReader reader = new StreamReader(fs)) {
 					while (reader.Peek() > -1 && found == false) {
 						String line = reader.ReadLine(); //moves the reader to the next line by the way.
 						if (!Regex.IsMatch(line, "^\\s*#")) //Check that a hashtag does not procede everything.
-							if (Regex.IsMatch(line, "^\\s*" + goalPattern + "\\s*{")) //Does line contain region name with { after it?
+							if (Regex.IsMatch(line, "^\\s*" + targetRegion + "\\s*=\\s*{")) //Does line contain region name with { after it?
 							{
-								System.Console.WriteLine("Phrase: '{0}' found.", goalPattern);
+								System.Console.WriteLine("Phrase: '{0}' found.", targetRegion);
 								found = true;
 							}
 					}
 
 					if (found == false) {
-						System.Console.WriteLine("Region {0} not found, or improperly defined.",goalPattern);
+						System.Console.WriteLine("Region {0} not found, or improperly defined.", targetRegion);
 						return null;
 					} else {
 						while (reader.Peek() > -1) {
@@ -214,46 +220,12 @@ namespace FileActions
 							if (!Regex.IsMatch(line, "^\\s*#")) //Check that a hashtag does not procede everything.
 								if (Regex.IsMatch(line, "^}")) //Does line end now?
 								{
-									System.Console.WriteLine("Region '{0}' Closed", goalPattern);
+									System.Console.WriteLine("Region '{0}' Closed", targetRegion);
 									return members.ToArray();
 								} else {
 									line = line.Trim();
-									while (line != "") {
-
-										Match member = Regex.Match(line, "^\\s*\\d+\\s*");
-										if (member.Success) {
-											int newMem = Convert.ToInt32(line.Substring(member.Index, member.Length).Trim());
-											members.Add(newMem);
-											System.Console.WriteLine(newMem);
-											line = line.Substring(member.Length);
-											line.Trim();
-											break;
-										}
-
-										member = Regex.Match(line, "^\\s*#");
-										if (member.Success) {
-											line = line.Trim();
-											break;
-										}
-
-										// If another alias is found, get it's members.
-										member = Regex.Match(line, "^\\s*[a-zA-Z]+\\s*");
-										if (member.Success) {
-											// If the region recursively contains itself, throw an error.
-											if(member.Value == goalPattern){
-												throw new FormatException(
-												"You must not include a region within itself. That is recursive, and problematic.");
-											}
-											line = line.Trim();
-											int[] otherMembers = getMembers(path, member.Value);
-											if (otherMembers != null){
-												foreach (int i in otherMembers) {
-													members.Add(i);
-												}
-											}
-											line = line.Substring(member.Length);
-										}
-									}
+									List<int> lineMembers = getLineMembers(line, path, targetRegion);
+									members.AddRange(lineMembers);
 								}
 						}
 						throw new System.Exception("Badly formatted Region. Regions should have the open brackets" +
@@ -265,6 +237,55 @@ namespace FileActions
 				Console.WriteLine("Unknown error occured when reading {0}", path);
 				throw specifics;
 			}
+		}
+
+		private static List<int> getLineMembers(String line, String path, String targetRegion) {
+			//remove
+			List<int> members = new List<int>();
+			while (line != "") {
+
+				Match member = Regex.Match(line,"^\\s*{");
+				if (member.Success){
+					line = line.Substring(member.Length);
+				}
+				member = Regex.Match(line, "^\\s*\\d+\\s*");
+				if (member.Success) {
+					int newMem = Convert.ToInt32(line.Substring(member.Index, member.Length).Trim());
+					members.Add(newMem);
+					line = line.Substring(member.Length);
+				}
+
+				//End Early if next char is '#' or '}'
+				member = Regex.Match(line, "^\\s*#");
+				if (member.Success) {
+					break;
+				}
+				member = Regex.Match(line, "^\\s*}");
+				if (member.Success) {
+					break;
+				}
+
+				// If another alias is found, get it's members.
+				member = Regex.Match(line, "^\\s*[a-zA-Z]+\\s*");
+				if (member.Success) {
+					// If the region recursively contains itself, throw an error.
+					if (member.Value == targetRegion) {
+						throw new FormatException(
+						"You must not include a region within itself. That is recursive, and problematic.");
+					}
+					string subTarget = member.Value.Trim();
+					int[] otherMembers = getMembers(path, subTarget);
+					if (otherMembers != null) {
+						foreach (int i in otherMembers) {
+							members.Add(i);
+						}
+					}
+					line = line.Substring(member.Length);
+				}
+				line = line.Trim();
+			}
+
+			return members;
 		}
 	}
 }
