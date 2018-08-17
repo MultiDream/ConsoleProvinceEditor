@@ -38,7 +38,15 @@ A small hack to quickly change many file's properties.
 * Allow conditional clause to restrict regions. (where command.)
 * Allow conditional clauses to change action. (limit command.)
 
+##### 0.6 Base Regions
+* Compile a set of starting regions
+
+##### 0.7 Logging
+* Introduce an error log.
+
+##### 0.8 Scripting
+* Allow a user to run a script that performs multiple commands at once.
+
 ##### 1.0 release
 * Polish glaring errors
 * Compile Bug list
-* Release
