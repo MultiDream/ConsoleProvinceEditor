@@ -1,7 +1,7 @@
 # ConsoleProvinceEditor
 A small hack to quickly change many file's properties.
 
-### CURRENT VERSION: 0.3.1 Comments
+### CURRENT VERSION: 0.4 Aliases
 
 ### Version History
 
