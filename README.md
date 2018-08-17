@@ -5,8 +5,9 @@ A small hack to quickly change many file's properties.
 
 ### Version History
 
-#### 0.4 Aliases (In development)
-* Allow Nesting for regions
+#### 0.4 Aliases
+* Allow an anonymous region clause ({ # # # }) to be defined and used in commands
+* Allow region nesting.
 
 #### 0.3.1.1 Bug Fix for Comments (Released)
 * Fixed a bug where the write method did not create its own line on a consistant basis.
@@ -32,10 +33,6 @@ A small hack to quickly change many file's properties.
 * Can write to all files in a region.
 
 ### Upcoming Versions
-
-##### 0.4 Aliases
-* Allow an anonymous region clause ({ # # # }) to be defined and used in commands
-* Allow region nesting.
 
 ##### 0.5 Conditionals
 * Allow conditional clause to restrict regions. (where command.)
