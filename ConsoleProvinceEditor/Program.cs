@@ -34,8 +34,7 @@ namespace ConsoleProvinceEditor {
 		#endregion
 	}
 
-	/*
-	 * Console always need to grab from the same place, all that changes
+	/* Console always need to grab from the same place, all that changes
 	 * is what happens once they find the right file.
 	 * 
 	 * A Console can perform a command.
@@ -84,6 +83,8 @@ namespace ConsoleProvinceEditor {
 				String word = input[0].ToLower();
 				switch (word)
 				{
+					#region Region_Command
+					/* The Region Command takes 1 arguement, the alias of the region.*/
 					case "region":
 						//Do that method.
 						if (input.Length > 1)
@@ -102,6 +103,8 @@ namespace ConsoleProvinceEditor {
 							Console.WriteLine("Need a second arguement <region> for region command.");
 						}
 						break;
+					#endregion
+					#region Kill_Command
 					case "kill":
 						if (input.Length > 1)
 						{
@@ -121,6 +124,8 @@ namespace ConsoleProvinceEditor {
 							Console.WriteLine("Need a second arguement <region> for delete command.");
 						}
 						break;
+					#endregion
+					#region Write_Command
 					case "write":
 						if (input.Length > 2)
 						{
@@ -141,6 +146,8 @@ namespace ConsoleProvinceEditor {
 							Console.WriteLine("Need three arguements for the write command.");
 						}
 						break;
+					#endregion
+					#region Remove_Command
 					case "remove":
 						if (input.Length > 2)
 						{
@@ -161,6 +168,8 @@ namespace ConsoleProvinceEditor {
 							Console.WriteLine("Need three arguements for the remove command.");
 						}
 						break;
+					#endregion
+					#region RemoveLine_Command
 					case "removeline":
 						if (input.Length > 2) {
 							int[] members = FileActions.Command.getMembers(resourceDir + "\\regions.txt", input[1]);
@@ -175,6 +184,8 @@ namespace ConsoleProvinceEditor {
 							Console.WriteLine("Need three arguements for the removeLine command.");
 						}
 						break;
+					#endregion
+					#region Replace_Command
 					case "replace":
 						if (input.Length > 3)
 						{
@@ -196,6 +207,7 @@ namespace ConsoleProvinceEditor {
 							Console.WriteLine("Need three arguements for the replace command.");
 						}
 						break;
+					#endregion
 					case "exit":
 						return false; //stop
 					default:
@@ -220,7 +232,8 @@ namespace ConsoleProvinceEditor {
 				{
 					String hold = remaining.Substring(nextWord.Index, nextWord.Length).Trim();
 					words.Add(hold);
-					break;
+					remaining = remaining.Substring(nextWord.Length).Trim();
+					continue;
 				}
 
 				//Make sure to capture a square brackets as ONE COMMAND
@@ -228,15 +241,17 @@ namespace ConsoleProvinceEditor {
 				if (nextWord.Success) {
 					String hold = remaining.Substring(nextWord.Index, nextWord.Length).Trim();
 					words.Add(hold);
-					break;
+					remaining = remaining.Substring(nextWord.Length).Trim();
+					continue;
 				}
 
 				//Catch Phrases with the right characters
-				nextWord = Regex.Match(remaining, "^\\s*[a-zA-Z]+\\s*");
+				nextWord = Regex.Match(remaining, "^\\s*[a-zA-Z_]+\\s*");
 				if (nextWord.Success) {
 					String hold = remaining.Substring(nextWord.Index, nextWord.Length).Trim();
 					words.Add(hold);
 					remaining = remaining.Substring(nextWord.Length).Trim();
+					continue;
 				}
 				
 			}

@@ -128,6 +128,7 @@ namespace FileActions
 				throw specifics;
 			}
 		}
+
 		/* RemoveLine removes the WHOLE LINE if a matching attribute if found. */
 		public static void removeAttribute(String path, params object[] args) {
 		System.Console.Write("Writing...");
@@ -138,7 +139,7 @@ namespace FileActions
 				
 				//Don't Add the lines that contain a match.
 				for(int i = 0; i < allLines.Length;i++){
-					String pattern = "\\s*" + toFind+"\\s+=";
+					String pattern = "\\s*" + toFind+"\\s*";
 					if (!Regex.IsMatch(allLines[i],pattern)) {
 						allText.Add(allLines[i]);
 					}
@@ -152,6 +153,30 @@ namespace FileActions
 			}
 		}
 
+		/* Given a path, verify that the file meets a condition.*/
+		public static void condition(String path, params object[] args){
+			System.Console.Write("Verifying Condition...\n\n");
+			try {
+				String find = (String) args[0];
+				int condition = (int)args[1];
+				//Conditions must be converted into an int.
+				using (FileStream fs = File.Open(path, FileMode.Open))
+				using (TextReader reader = new StreamReader(fs)) {
+					while (reader.Peek() > -1) {
+						String line = reader.ReadLine();
+						if (Regex.IsMatch(find,line)){	//If the value is contained, evalute the condition.
+							// Now, take the phrase after the equal sign.
+						}
+						System.Console.WriteLine(line);
+					}
+				}
+				System.Console.WriteLine("\nDone Reading.\n");
+			} catch (Exception specifics) {
+				Console.WriteLine("Failed!");
+				Console.WriteLine("Unknown error occured when reading {0}", path);
+				throw specifics;
+			}
+		}
 		//HELPER FUNCTIONS. These cannot be plans passed to Go.
 
 		/* Find a phrase. Phrase is arguement 0. Return by setting arg 1*/
@@ -266,7 +291,7 @@ namespace FileActions
 				}
 
 				// If another alias is found, get it's members.
-				member = Regex.Match(line, "^\\s*[a-zA-Z]+\\s*");
+				member = Regex.Match(line, "^\\s*[a-zA-Z_]+\\s*");
 				if (member.Success) {
 					// If the region recursively contains itself, throw an error.
 					if (member.Value == targetRegion) {
