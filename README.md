@@ -1,5 +1,7 @@
 # ConsoleProvinceEditor
 A small hack to quickly change many file's properties.
+1/16/2022 - Project has been dead for a while, but I am considering rebooting this. 
+Probably would like to create a few more services that allow players to setup a local DB representation of their world.
 
 ### CURRENT VERSION: 0.3.1 Comments
 
