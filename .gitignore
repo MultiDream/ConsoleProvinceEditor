@@ -1,6 +1,0 @@
-# I think these are unecessary. Let's find out.
-
-# visual studio meta data, and other compiled directories.
-*.vs
-**/obj
-**/bin
